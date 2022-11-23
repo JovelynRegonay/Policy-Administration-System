@@ -41,12 +41,13 @@ public class Claim {
         s.nextLine();
         System.out.print("Address where accident happened: ");
         accidentAdd = s.nextLine();
-        System.out.print("Description of accident");
+        System.out.print("Description of accident: ");
         accidentDesc = s.nextLine();
-        System.out.print("Description of damage to vehicle");
+        System.out.print("Description of damage to vehicle: ");
         damageDesc = s.nextLine();
-        System.out.print("Estimated cost of repairs ");
+        System.out.print("Estimated cost of repairs: ");
         cost = s.nextLine();
+
 
     }
 
@@ -77,6 +78,7 @@ public class Claim {
                     claimNoGenerator();
 
                     claimInfo();
+                    System.out.println("\nSuccessful! A new claim is created.");
                     saveClaimToDB();
 
                 } else {

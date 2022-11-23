@@ -28,66 +28,8 @@ public class PASDriver {
 
     public static void main(String[] args) throws Exception {
 
-        try {
-            Connection con = DriverManager.getConnection( // connects to the mysql database
-                    "jdbc:mysql://localhost:3306/java_database", "root", "Jovganda143121");
-
-            Statement stmt = con.createStatement();
-
-            String claims_sql = "CREATE TABLE if not exists CLAIMS_NOW" +
-                   "(claim_no INTEGER not NULL, " +
-                   " date_of_accident VARCHAR(30), " + 
-                   " address_of_accident VARCHAR(255), " + 
-                   " accident_desc VARCHAR(45), " + 
-                   " damage_desc VARCHAR(45)," +
-                   " cost_of_repair VARCHAR(45))";
-                   
-
-            String customer_account_sql = "CREATE TABLE if not exists customer_account_now " +
-            "(account_no int(4)" +
-            " first_name VARCHAR(1000), " + 
-            " last_name VARCHAR(1000), " + 
-            " address VARCHAR(1000)) " ;
-           
-            String policy_holder_sql = "CREATE TABLE if not exists policy_holder_now " +
-            "(first_name VARCHAR(1000), " + 
-            " last_name VARCHAR(1000), " + 
-            " date_of_birth VARCHAR(1000), " +
-            " address VARCHAR(1000), " +
-            " drivers_license VARCHAR(1000), " +
-            " date_of_DL_first_issue VARCHAR(1000)) ";
-
-            String policy_sql = "CREATE TABLE if not exists policy_now " +
-            "(policy_no VARCHAR(1000), " + 
-            " effective_date VARCHAR(1000), " + 
-            " expiration_date VARCHAR(1000), " +
-            " account_no VARCHAR(1000), " +
-            " policy_holder VARCHAR(1000), " +
-            " total_policy_premium VARCHAR(1000)) ";
-
-            String vehicle_sql = "CREATE TABLE if not exists vehicle_now " +
-            "(make VARCHAR(1000), " + 
-            " model VARCHAR(1000), " + 
-            " year VARCHAR(1000), " +
-            " type VARCHAR(1000), " +
-            " fuel_type VARCHAR(1000), " +
-            " purchase_price VARCHAR(1000), " +
-            " color VARCHAR(1000), " +
-            " premium_charge VARCHAR(1000), " +
-            " policy_no VARCHAR(1000), " +
-            " account_no VARCHAR(1000)) ";
-
-         stmt.executeUpdate(claims_sql);
-         stmt.executeUpdate(customer_account_sql);
-         stmt.executeUpdate(policy_holder_sql);
-         stmt.executeUpdate(policy_sql);
-         stmt.executeUpdate(vehicle_sql);
-        }
-               
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-
+       
+        createTable();
         menu();
     }
 
@@ -169,15 +111,89 @@ public class PASDriver {
                     case 7:
                         claim.searchClaim(); // calling the method searchClaim under claim class
                         break;
+                    
+                    case 8:
+                        System.out.println("Thank you for using the APP");
+                        break;
 
                     default:
                         System.out.println("Invalid input. Please try again!");
 
                 }
             } catch (Exception e) {
-                System.out.println("Invalid input. Please try again!");
+                System.out.println("catch to!");
                 s.next();
             }
         } while (menu != 8); // loop that will not end unless the menu is equal to 8.
+    }
+
+    public static void createTable() {
+        try {
+            Connection con = DriverManager.getConnection( // connects to the mysql database
+                    "jdbc:mysql://localhost:3306/java_database", "root", "Jovganda143121");
+
+            Statement claims_stmt = con.createStatement();
+
+            String claims_sql = "CREATE TABLE if not exists CLAIMS_temp" +
+                   "(claim_no VARCHAR(30), " +
+                   " date_of_accident VARCHAR(30), " + 
+                   " address_of_accident VARCHAR(255), " + 
+                   " accident_desc VARCHAR(45), " + 
+                   " damage_desc VARCHAR(45)," +
+                   " cost_of_repair VARCHAR(45))";
+                   
+            Statement ca_stmt = con.createStatement();
+
+            String customer_account_sql = "CREATE TABLE if not exists customer_account_temp " +
+            "(account_no int(4) PRIMARY KEY AUTO_INCREMENT not null , " +
+            " first_name VARCHAR(1000), " + 
+            " last_name VARCHAR(1000), " + 
+            " address VARCHAR(1000)) " ;
+            
+            Statement alter1 = con.createStatement();
+            String alter = "ALTER table customer_account_temp auto_increment = 1000";
+            
+           Statement ph_stmt = con.createStatement();
+            String policy_holder_sql = "CREATE TABLE if not exists policy_holder_temp " +
+            "(first_name VARCHAR(1000), " + 
+            " last_name VARCHAR(1000), " + 
+            " date_of_birth VARCHAR(1000), " +
+            " address VARCHAR(1000), " +
+            " drivers_license VARCHAR(1000), " +
+            " date_of_DL_first_issue DATE) ";
+
+            Statement pol_stmt = con.createStatement();
+            String policy_sql = "CREATE TABLE if not exists policy_pas_temp " +
+            "(policy_no int, " + 
+            " effective_date DATE, " + 
+            " expiration_date DATE, " +
+            " account_no int, " +
+            " policy_holder VARCHAR(1000), " +
+            " total_policy_premium DECIMAL(10,2)) ";
+
+            Statement vehicle_stmt = con.createStatement();
+            String vehicle_sql = "CREATE TABLE if not exists vehicle_temp " +
+            "(make VARCHAR(1000), " + 
+            " model VARCHAR(1000), " + 
+            " year VARCHAR(1000), " +
+            " type VARCHAR(1000), " +
+            " fuel_type VARCHAR(1000), " +
+            " purchase_price INT, " +
+            " color VARCHAR(1000), " +
+            " premium_charge INT, " +
+            " policy_no INT, " +
+            " account_no VARCHAR(1000)) ";
+
+         claims_stmt.executeUpdate(claims_sql);
+         ca_stmt.executeUpdate(customer_account_sql);
+         ph_stmt.executeUpdate(policy_holder_sql);
+         pol_stmt.executeUpdate(policy_sql);
+         vehicle_stmt.executeUpdate(vehicle_sql);
+            alter1.executeUpdate(alter);
+        }
+               
+            catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 }
